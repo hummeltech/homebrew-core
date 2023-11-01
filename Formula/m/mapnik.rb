@@ -2,7 +2,7 @@ class Mapnik < Formula
   desc "Toolkit for developing mapping applications"
   homepage "https://mapnik.org/"
   license "LGPL-2.1-or-later"
-  revision 23
+  revision 24
   head "https://github.com/mapnik/mapnik.git", branch: "master"
 
   # TODO: Try switching to CMake build on next release as it works better with
@@ -53,6 +53,7 @@ class Mapnik < Formula
   depends_on "libpng"
   depends_on "libpq"
   depends_on "libtiff"
+  depends_on "libxml2"
   depends_on "proj"
   depends_on "sqlite"
   depends_on "webp"
@@ -92,6 +93,7 @@ class Mapnik < Formula
       FAST=True
       CPP_TESTS=False
       INPUT_PLUGINS=all
+      XMLPARSER=libxml2
       BOOST_INCLUDES=#{boost.opt_include}
       BOOST_LIBS=#{boost.opt_lib}
       FREETYPE_CONFIG=#{Formula["freetype"].opt_bin}/freetype-config
