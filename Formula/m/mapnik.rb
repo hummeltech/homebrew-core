@@ -6,16 +6,16 @@ class Mapnik < Formula
   head "https://github.com/mapnik/mapnik.git", branch: "master"
 
   # TODO: Try switching to CMake build on next release as it works better with
-  # Homebrew's build environment and avoids `--env=std` when using `scons`.
+  # Homebrew's build environment.
   stable do
     url "https://github.com/mapnik/mapnik/releases/download/v3.1.0/mapnik-v3.1.0.tar.bz2"
     sha256 "43d76182d2a975212b4ad11524c74e577576c11039fdab5286b828397d8e6261"
 
-    # Fix build with Scons 4 using Arch Linux patch. Remove in the next release.
-    # Ref: https://github.com/mapnik/mapnik/commit/84a05a6597a941acfad220dae3fbfe5d20bfeb26
+    # Fix build with bundled SCons. Remove in the next release.
+    # Ref: https://github.com/mapnik/mapnik/pull/4294
     patch do
-      url "https://raw.githubusercontent.com/archlinux/svntogit-community/239768d7cd1217d5910d3f7d8ace86a7f85ad23c/trunk/scons4.patch"
-      sha256 "79a85ddba3ec17b86cb216e21442611498a9f2612f03e98708057b3c3a6e8b06"
+      url "https://github.com/mapnik/mapnik/commit/7da9009e7ffffb0b9429890f6f13fee837ac320f.patch?full_index=1"
+      sha256 "eef9ab6327590a2ee295af03b40d7cfb381dbe35441914230880b0f764574e43"
     end
 
     # Fix build with Boost v1.83 using Arch Linux patch. Remove in the next release.
@@ -42,7 +42,7 @@ class Mapnik < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "scons" => :build
+  depends_on "python@3.11" => :build
   depends_on "boost"
   depends_on "cairo"
   depends_on "freetype"
@@ -115,8 +115,8 @@ class Mapnik < Formula
       WEBP_LIBS=#{webp.opt_lib}
     ]
 
-    system "scons", "configure", *args
-    system "scons", "install", "--jobs=#{ENV.make_jobs}"
+    system "python3", "scons/scons.py", "configure", *args
+    system "python3", "scons/scons.py", "install", "--jobs=#{ENV.make_jobs}"
   end
 
   test do
